@@ -47,4 +47,20 @@ defmodule ExRay.Span do
   def parent_id({:span, _, pid, _, _, _, _, _, _}) do
     pid
   end
+
+  @doc """
+  Adds a log to a span
+  """
+  @spec log(any, any) :: any
+  def log(span, text) do
+    span |> :otter.log(text)
+  end
+
+  @doc """
+  Adds a tag to a span
+  """
+  @spec tag(any, any, any) :: any
+  def tag(span, key, value) do
+    span |> :otter.tag(key, value)
+  end
 end

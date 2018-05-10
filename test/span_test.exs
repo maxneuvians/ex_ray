@@ -61,6 +61,23 @@ defmodule ExRay.SpanTest do
     span |> Span.close("2")
   end
 
+  test "log/2", %{span: span} do
+    log = "Has left the building"
+    span = Span.log(span, log)
+    logs = elem(span, 7)
+    {_ts, capturedLog} = hd(logs)
+    assert log == capturedLog
+  end 
+
+  test "tag/3", %{span: span} do
+    key = :kind
+    value = :critical
+    span = Span.tag(span, key, value)
+    tags = elem(span, 6)
+    assert Keyword.has_key?(tags, key) 
+    assert tags[key] == value
+  end 
+
   test "parent_id/1", ctx do
     assert ctx[:span] |> Span.parent_id == 12387109925362352574
   end
