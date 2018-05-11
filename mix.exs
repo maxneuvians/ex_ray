@@ -9,7 +9,7 @@ defmodule ExRay.Mixfile do
       source_url:        "https://github.com/derailed/ex_ray",
       package:           package(),
       docs:              docs(),
-      elixir:            "~> 1.5",
+      elixir:            "~> 1.4",
       start_permanent:   Mix.env == :prod,
       deps:              deps(),
       test_coverage:     [tool: ExCoveralls],
