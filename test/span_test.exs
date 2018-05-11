@@ -79,6 +79,14 @@ defmodule ExRay.SpanTest do
     span |> Span.close("1")
   end
 
+  test "id/1", ctx do
+    assert ctx[:span] |> Span.id == 15549390946617352406
+  end
+
+  test "ids/1", ctx do
+    assert ctx[:span] |> Span.ids == {15549390946617352406, 12387109925362352574, 1526060847}
+  end
+
   test "log/2", %{span: span} do
     log = "Has left the building"
     span = Span.log(span, log)

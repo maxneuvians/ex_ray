@@ -59,6 +59,22 @@ defmodule ExRay.Span do
     span |> :otter.finish()
     ExRay.Store.pop(req_id)
   end
+  
+  @doc """
+  Convenience to retrive the span ID from a given span
+  """
+  @spec id({:span, integer, integer, String.t, integer, integer, list(), list(), integer}) :: Integer
+  def id({:span, _, _, _, id, _, _, _, _}) do
+    id
+  end
+
+  @doc """
+  Convenience to retrive the span ID, trace_ID, and parent ID from a given span
+  """
+  @spec ids({:span, integer, integer, String.t, integer, integer, list(), list(), integer}) :: {Integer, Integer, Integer}
+  def ids({:span, _, trace_id, _, id, parent_id, _, _, _}) do
+    {id, trace_id, parent_id}
+  end
 
   @doc """
   Adds a log to a span
@@ -71,7 +87,7 @@ defmodule ExRay.Span do
   @doc """
   Convenience to retrive the parent ID from a given span
   """
-  @spec parent_id({:span, integer, integer, String.t, integer, integer, list(), list(), integer}) :: String.t
+  @spec parent_id({:span, integer, integer, String.t, integer, integer, list(), list(), integer}) :: Integer
   def parent_id({:span, _, _, _, _, parent_id, _, _, _}) do
     parent_id
   end
