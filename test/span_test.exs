@@ -18,7 +18,7 @@ defmodule ExRay.SpanTest do
       12387109925362352574,
       :root,
       15549390946617352406,
-      :undefined,
+      1526060847,
       [],
       [],
       :undefined
@@ -49,16 +49,34 @@ defmodule ExRay.SpanTest do
     assert test1(1, 2) == 3
   end
 
+  test "open/2" do
+    span = Span.open("fred", "2")
+    assert length(Store.get("2")) == 1
+    span |> Span.close("2")
+  end
+
+  test "open/3 with trace ID", ctx do
+    trace_id = Span.trace_id(ctx[:span])
+    span = Span.open("fred", "1", trace_id)
+    assert Store.current("1") == span
+    assert Span.trace_id(span) == trace_id
+    span |> Span.close("1")
+  end
+
   test "open/3", ctx do
     span = Span.open("fred", "1", ctx[:span])
     assert Store.current("1") == span
     span |> Span.close("1")
   end
 
-  test "open/2" do
-    span = Span.open("fred", "2")
-    assert length(Store.get("2")) == 1
-    span |> Span.close("2")
+  test "open/4 with trace ID and parent ID", ctx do
+    trace_id = Span.trace_id(ctx[:span])
+    parent_id = Span.parent_id(ctx[:span])
+    span = Span.open("fred", "1", trace_id, parent_id)
+    assert Store.current("1") == span
+    assert Span.trace_id(span) == trace_id
+    assert Span.parent_id(span) == parent_id
+    span |> Span.close("1")
   end
 
   test "log/2", %{span: span} do
@@ -79,6 +97,10 @@ defmodule ExRay.SpanTest do
   end 
 
   test "parent_id/1", ctx do
-    assert ctx[:span] |> Span.parent_id == 12387109925362352574
+    assert ctx[:span] |> Span.parent_id == 1526060847
+  end
+
+  test "trace_id/1", ctx do
+    assert ctx[:span] |> Span.trace_id == 12387109925362352574
   end
 end
